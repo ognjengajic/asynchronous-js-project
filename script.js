@@ -25,7 +25,7 @@ const renderCountry = function (dataCountry, className) {
   countriesContainer.insertAdjacentHTML(`beforeend`, html);
   countriesContainer.style.opacity = 1;
 };
-
+/*
 const getCountryAndNeighbour = function (country) {
   //AJAX CALL FOR FIRST COUNTRY
   const request = new XMLHttpRequest();
@@ -70,3 +70,33 @@ setTimeout(() => {
     }, 1000);
   }, 1000);
 }, 1000);
+*/
+
+//old way
+/*
+const request = new XMLHttpRequest();
+request.open(`GET`, ` https://restcountries.com/v3.1/name/${country}`);
+request.send();
+*/
+
+//modern way (Promises)
+/*
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(function (response) {
+      console.log(response);
+      return response.json();
+    })
+    .then(function (data) {
+      console.log(data);
+      renderCountry(data[0]);
+    });
+};
+*/
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then(response => response.json())
+    .then(data => renderCountry(data[0]));
+};
+
+getCountryData(`Serbia`);
