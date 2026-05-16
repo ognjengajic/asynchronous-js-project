@@ -8,18 +8,9 @@ const countriesContainer = document.querySelector('.countries');
 
 ///////////////////////////////////////
 
-const getCountryData = function (country) {
-  const request = new XMLHttpRequest();
-  request.open(`GET`, ` https://restcountries.com/v3.1/name/${country}`);
-  request.send();
-
-  request.addEventListener(`load`, function () {
-    //console.log(this.responseText);
-    const [dataCountry] = JSON.parse(this.responseText);
-    console.log(dataCountry);
-
-    const html = `
-   <article class="country">
+const renderCountry = function (dataCountry, className) {
+  const html = `
+   <article class="country ${className}">
           <img class="country__img" src="${dataCountry.flags.png}" />
           <div class="country__data">
             <h3 class="country__name">${dataCountry.name.common}</h3>
@@ -31,11 +22,51 @@ const getCountryData = function (country) {
         </article>
   `;
 
-    countriesContainer.insertAdjacentHTML(`beforeend`, html);
-    countriesContainer.style.opacity = 1;
+  countriesContainer.insertAdjacentHTML(`beforeend`, html);
+  countriesContainer.style.opacity = 1;
+};
+
+const getCountryAndNeighbour = function (country) {
+  //AJAX CALL FOR FIRST COUNTRY
+  const request = new XMLHttpRequest();
+  request.open(`GET`, ` https://restcountries.com/v3.1/name/${country}`);
+  request.send();
+  request.addEventListener(`load`, function () {
+    //console.log(this.responseText);
+    const [dataCountry] = JSON.parse(this.responseText);
+    console.log(dataCountry);
+    //RENDER FIRST COUNTRY
+    renderCountry(dataCountry);
+
+    //GET NEIGHBOUR COUNTRY
+    const neighbour = dataCountry.borders?.[0];
+    if (!neighbour) return;
+
+    //AJAX CALL FOR NEIGHBOUR COUNTRY
+    const request2 = new XMLHttpRequest();
+    request2.open(`GET`, ` https://restcountries.com/v3.1/alpha/${neighbour}`);
+    request2.send();
+    request2.addEventListener(`load`, function () {
+      const [data2] = JSON.parse(this.responseText);
+      console.log(data2);
+      renderCountry(data2, `neighbour`);
+    });
   });
 };
 
-getCountryData(`Serbia`);
-getCountryData(`Portugal`);
-getCountryData(`USA`);
+//getCountryAndNeighbour(`USA`);
+getCountryAndNeighbour(`Serbia`);
+
+//Callback hell example
+setTimeout(() => {
+  console.log(`1 SECOND`);
+  setTimeout(() => {
+    console.log(`2 SECOND`);
+    setTimeout(() => {
+      console.log(`3 SECOND`);
+      setTimeout(() => {
+        console.log(`4 SECOND`);
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
