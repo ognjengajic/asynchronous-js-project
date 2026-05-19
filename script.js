@@ -211,6 +211,67 @@ const whereAmI = function (lat, lng) {
     .catch(err => console.error(`${err.message} ❌`));
 };
 
+/*
 whereAmI(52.508, 13.381);
 whereAmI(30.508, 12.381);
 whereAmI(20.508, 20.381);
+*/
+
+//Building a Simple Promise
+
+const lotteryPromise = new Promise(function (resolve, reject) {
+  console.log(`Lottery draw is happening`);
+
+  setTimeout(function () {
+    if (Math.random() >= 0.5) {
+      resolve(`You win 👍`);
+    } else {
+      reject(new Error(`You lost your money 🤦‍♂️`));
+    }
+  }, 2000);
+});
+
+lotteryPromise.then(res => console.log(res)).catch(err => console.error(err));
+
+//Promisifying setTimeout
+const wait = function (seconds) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, seconds * 1000);
+  });
+};
+
+wait(1)
+  .then(() => {
+    console.log(`I waited for 1 second`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`I waited for 2 seconds`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`I waited for 3 seconds`);
+    return wait(1);
+  })
+  .then(() => {
+    console.log(`I waited for 4 seconds`);
+  });
+
+//Callback hell example
+/*
+setTimeout(() => {
+  console.log(`1 SECOND`);
+  setTimeout(() => {
+    console.log(`2 SECOND`);
+    setTimeout(() => {
+      console.log(`3 SECOND`);
+      setTimeout(() => {
+        console.log(`4 SECOND`);
+      }, 1000);
+    }, 1000);
+  }, 1000);
+}, 1000);
+*/
+
+Promise.resolve(`abcde`).then(x => console.log(x));
+Promise.reject(new Error(`There is a Problem!`)).catch(x => console.error(x));
