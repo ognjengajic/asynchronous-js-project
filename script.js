@@ -326,7 +326,7 @@ btn.addEventListener(`click`, whereAmI);
 */
 
 //challange 2#
-
+/*
 const wait = function (seconds) {
   return new Promise(function (resolve) {
     setTimeout(resolve, seconds * 1000);
@@ -371,3 +371,37 @@ createImage(`img/img-1.jpg`)
     currentImage.style.display = `none`;
   })
   .catch(err => console.error(err));
+*/
+
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
+const whereAmI = async function () {
+  //Geolocation
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
+
+  //reverse geocoding
+  const resGeo = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`,
+  );
+  const dataGeo = await resGeo.json();
+  console.log(dataGeo);
+
+  //Country data
+  //same as this
+  //fetch(`https://restcountries.com/v3.1/name/${country}`).then(res=>console.log(res));
+
+  const res = await fetch(
+    `https://restcountries.com/v3.1/name/${dataGeo.countryName}`,
+  );
+  //console.log(res);
+
+  const data = await res.json();
+  console.log(data);
+  renderCountry(data[0]);
+};
+whereAmI();
+console.log(`First`);
