@@ -391,7 +391,7 @@ const whereAmI = async function () {
     );
     if (!resGeo.ok) throw new Error(`Problem getting location data`);
     const dataGeo = await resGeo.json();
-    console.log(dataGeo);
+    //console.log(dataGeo);
 
     //Country data
     //same as this
@@ -402,17 +402,38 @@ const whereAmI = async function () {
     );
     if (!res.ok) throw new Error(`Problem getting location data`);
     //console.log(res);
-
     const data = await res.json();
-    console.log(data);
+    //console.log(data);
     renderCountry(data[0]);
+
+    return `You are in ${dataGeo.city}, ${dataGeo.countryName}`;
   } catch (err) {
     console.error(`${err} ❌❌❌`);
-    renderCountry(`❌ ${err.message}`);
+    //renderCountry(`❌ ${err.message}`);
+
+    //Reject promise returned from async function
+    //throw err;
   }
 };
-whereAmI();
+
 console.log(`First`);
+/*
+whereAmI()
+  .then(city => console.log(city))
+  .catch(err => console.error(`${err.message} ❌`))
+  .finally(() => {
+    console.log(`Third`);
+  });
+*/
+(async function () {
+  try {
+    const city = await whereAmI();
+    console.log(city);
+  } catch (err) {
+    console.error(`${err.message} ❌`);
+  }
+  console.log(`Third`);
+})();
 
 /*
 try {
