@@ -140,15 +140,7 @@ const getCountryData = function (country) {
 };
 */
 /*
-const getJSON = function (url, errorMessage = `Something went wrong!`) {
-  return fetch(url).then(response => {
-    if (!response.ok) {
-      throw new Error(`${errorMessage} ${response.status}`);
-    }
 
-    return response.json();
-  });
-};
 
 const getCountryData = function (country) {
   getJSON(
@@ -372,7 +364,7 @@ createImage(`img/img-1.jpg`)
   })
   .catch(err => console.error(err));
 */
-
+/*
 const getPosition = function () {
   return new Promise(function (resolve, reject) {
     navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -417,14 +409,14 @@ const whereAmI = async function () {
 };
 
 console.log(`First`);
-/*
+
 whereAmI()
   .then(city => console.log(city))
   .catch(err => console.error(`${err.message} ❌`))
   .finally(() => {
     console.log(`Third`);
   });
-*/
+
 (async function () {
   try {
     const city = await whereAmI();
@@ -435,7 +427,9 @@ whereAmI()
   console.log(`Third`);
 })();
 
-/*
+
+
+
 try {
   let y = 1;
   const x = 3;
@@ -445,3 +439,36 @@ try {
   alert(err.message);
 }
 */
+
+//Running Promises in Parallel
+
+const getJSON = function (url, errorMessage = `Something went wrong!`) {
+  return fetch(url).then(response => {
+    if (!response.ok) {
+      throw new Error(`${errorMessage} ${response.status}`);
+    }
+
+    return response.json();
+  });
+};
+
+const get3Countries = async function (c1, c2, c3) {
+  try {
+    /*
+    const [data1] = await getJSON(`https://restcountries.com/v3.1/name/${c1}`);
+    const [data2] = await getJSON(`https://restcountries.com/v3.1/name/${c2}`);
+    const [data3] = await getJSON(`https://restcountries.com/v3.1/name/${c3}`);
+*/
+    //console.log([data1.capital, data2.capital, data3.capital]);
+    const data = await Promise.all([
+      getJSON(`https://restcountries.com/v3.1/name/${c1}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c2}`),
+      getJSON(`https://restcountries.com/v3.1/name/${c3}`),
+    ]);
+    console.log(data.map(d => d[0].capital));
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+get3Countries(`portugal`, `serbia`, `tanzania`);
